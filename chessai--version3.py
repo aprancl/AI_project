@@ -206,8 +206,9 @@ def main():
 
 
 
-
-
+def draw():
+    '''Draw a specific piece on the board.'''
+    pass
 
 
 
