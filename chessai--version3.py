@@ -2,13 +2,15 @@
 # description: Chess...
 
 import tkinter as tk
+from PIL import ImageTk, Image
 import os
+import pdb  # use pdb.set_trace() if you want to "step into" the code while it is running to do debugging
 
 IMAGEROOT = 'Pieces'  # directory for images
 LIGHT = '#FFFFFF'
 DARK = '#196F3D'
-WIDTH = 800  # in pixels
-HEIGHT = 800  # in pixels
+WIDTH = 600  # in pixels
+HEIGHT = 600  # in pixels
 NUMSQUARES = 8  # number of squares on chessboard
 
 def main():
@@ -34,12 +36,13 @@ def main():
             canvas.create_rectangle(x0, y0, x1, y1, fill=clr, outline=clr)
 
     # Draw pieces on board
-    # b_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_rook.svg.png"))
-    # canvas.create_image(0, 0, image=b_rook, anchor=tk.NW)
+    img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
+    img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
+    b_rook = ImageTk.PhotoImage(img)
+    canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
 
     # Update the GUI
     gui.mainloop() 
-
 
     # The chess board itself
     #squares(57-64)
