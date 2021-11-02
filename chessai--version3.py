@@ -25,10 +25,11 @@ def main():
             else:
                 clr = LIGHT
 
-            canvas.create_rectangle(col * px, row * px, (col + 1) * px, (row + 1) * px, fill=clr)
+            canvas.create_rectangle(col * px, row * px, (col + 1) * px, (row + 1) * px, fill=clr, outline=clr)
 
-    # w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
+    w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
 
+    root_window.mainloop() 
 
 
     # The chess board itself
@@ -199,7 +200,6 @@ def main():
 
 
 
-    root_window.mainloop() 
 
 
 
