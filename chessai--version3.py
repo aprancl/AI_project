@@ -3,6 +3,7 @@
 
 import tkinter as tk
 import os
+from tkinter.constants import ANCHOR
 
 IMAGEROOT = 'Pieces'  # directory for images
 LIGHT = '#FFFFFF'
@@ -22,25 +23,136 @@ def main():
     # Draw squares on board
     wid = WIDTH / NUMSQUARES  # width of each square, in pixels
     hei = HEIGHT / NUMSQUARES  # height of each square, in pixels
-    for row in range(1):
-        for col in range(NUMSQUARES):
-            if col % 2 == 0:
-                clr = DARK
-            else:
-                clr = LIGHT
+    
+    for row in range(NUMSQUARES):
 
-            x0, y0 = col * wid, row * hei  # coordinates of top-left corner of square
-            x1, y1 = (col + 1) * wid, (row + 1) * hei  # coordinates of bottom-right corner of square
-            canvas.create_rectangle(x0, y0, x1, y1, fill=clr, outline=clr)
+        if row % 2 == 0:
+            for col in range(NUMSQUARES):
+                if col % 2 == 0:
+                    clr = LIGHT
+                else:
+                    clr = DARK
+
+                x0, y0 = col * wid, row * hei  # coordinates of top-left corner of square
+                x1, y1 = (col + 1) * wid, (row + 1) * hei  # coordinates of bottom-right corner of square
+                canvas.create_rectangle(x0, y0, x1, y1, fill=clr, outline=clr)
+
+        if row % 2 == 1:
+            for col in range(NUMSQUARES):
+                if col % 2 == 0:
+                    clr = DARK
+                else:
+                    clr = LIGHT
+
+                x0, y0 = col * wid, row * hei  # coordinates of top-left corner of square
+                x1, y1 = (col + 1) * wid, (row + 1) * hei  # coordinates of bottom-right corner of square
+                canvas.create_rectangle(x0, y0, x1, y1, fill=clr, outline=clr)
+
+
 
     # Draw pieces on board
-    # b_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_rook.svg.png"))
-    # canvas.create_image(0, 0, image=b_rook, anchor=tk.NW)
 
+    w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
+    w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
+    w_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_rook.svg.png"))
+    w_bishop = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_bishop.svg.png"))
+    w_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_knight.svg.png"))
+    w_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_pawn.svg.png"))
+    b_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_king.svg.png"))
+    b_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_queen.svg.png"))
+    b_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_rook.svg.png"))
+    b_bishop = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_bishop.svg.png"))
+    b_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_knight.svg.png"))
+    b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
+    
+    def draw(piece, row, col):
+        canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW)
+
+    draw(w_king, 7, 4)
+    draw(w_queen, 7, 3)
+    draw(w_rook, 7, 0)
+    draw(w_rook, 7, 7)
+    draw(w_bishop, 7, 2)
+    draw(w_bishop, 7, 6)
+    draw(w_knight, 7, 1)
+    draw(w_knight, 7, 5)
+    draw(w_pawn, 6, 0)
+    draw(w_pawn, 6, 1)
+    draw(w_pawn, 6, 2)
+    draw(w_pawn, 6, 3)
+    draw(w_pawn, 6, 4)
+    draw(w_pawn, 6, 5)
+    draw(w_pawn, 6, 6)
+    draw(w_pawn, 6, 7)
+
+    draw(b_king, 0, 3)
+    draw(b_queen, 0, 4)
+    draw(b_rook, 0, 0)
+    draw(b_rook, 0, 7)
+    draw(b_bishop, 0, 2)
+    draw(b_bishop, 0, 5)
+    draw(b_knight, 0, 1)
+    draw(b_knight, 0, 6)
+    draw(b_pawn, 1, 0)
+    draw(b_pawn, 1, 1)
+    draw(b_pawn, 1, 2)
+    draw(b_pawn, 1, 3)
+    draw(b_pawn, 1, 4)
+    draw(b_pawn, 1, 5)
+    draw(b_pawn, 1, 6)
+    draw(b_pawn, 1, 7)
+
+# Piece management
+
+    state_of_board = [
+    [-3,-5,-4,-1,-2,-4,-5,-3],
+    [-6,-6,-6,-6,-6,-6,-6,-6],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 6, 6, 6, 6, 6, 6, 6, 6],
+    [ 3, 5, 4, 2, 1, 4, 5, 3]]
+
+    piece_dict = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
+                          -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
+
+
+    # maybe make a loop to reconstruct the board instead of hardcoding the pieces to their locations as they are now 
+#    for horizontal in state_of_board:
+#        x = horizontal
+#        for vertical in horizontal:
+#            if vertical == 1:
+#                draw(vertical, x, col )
+
+
+
+
+# Taking user input 
+
+# Tracking the mouse 
+
+    def click(event):
+        x = int(event.x)
+        y = int(event.y)
+        output = [x, y]
+        print(output)
+        piece = state_of_board[y // 100][x //100]
+        print(piece_dict[piece])
+    
+    gui.bind("<Button>", click)
+    
+  
+
+
+
+
+   
     # Update the GUI
     gui.mainloop() 
 
 
+# old code 
     # The chess board itself
     #squares(57-64)
 
@@ -188,10 +300,10 @@ def main():
     # square_8.grid(row = 7, column = 7)
 
     # Function reprocessing 
-            # For every move, two functions needed to be redefined: the f(x) belonging to the square that the piece is being moved from,
-            # and the f(x) of the square that the piece is moving to.
+            # For every move, two functions needed to be redefined: the f(x) belonging to the square that the # pos_val is being moved from,
+            # and the f(x) of the square that the # pos_val is moving to.
             
-            # More may technically need to be redefined in the future depending how I indicate where a piece can move, but that is to be determined.
+            # More may technically need to be redefined in the future depending how I indicate where a # pos_val can move, but that is to be determined.
 
 
     #       One idea on how to accomlish this. not sure if works.
@@ -202,340 +314,10 @@ def main():
     # def eval(player_input):
 
 
-
-
-
-
-
-
-
-
-
-
 # square value assingment 
     # Pieces: king = 1, queen = 2, rook = 3, bishop = 4, knight = 5, pawn = 6 
 
-def sqr_val_1():
-    pos_val = 1
-    piece = 3
-    print(piece)
 
-def sqr_val_2():
-    pos_val = 2
-    piece = 5
-    print(piece)
-
-def sqr_val_3():
-    pos_val = 3
-    piece = 4
-    print(piece)
-
-def sqr_val_4():
-    pos_val = 4
-    piece = 2
-    print(piece)
-
-def sqr_val_5():
-    pos_val = 5
-    piece = 1
-    print(piece)
-
-def sqr_val_6():
-    pos_val = 6
-    piece = 4
-    print(piece)
-
-def sqr_val_7():
-    pos_val = 7
-    piece = 5
-    print(piece)
-
-def sqr_val_8():
-    pos_val = 8
-    piece = 3
-    print(piece)
-
-def sqr_val_9():
-    pos_val = 9
-    piece = 6
-    print(piece)
-
-def sqr_val_10():
-    pos_val = 10
-    piece = 6
-    print(piece)
-
-def sqr_val_11():
-    pos_val = 11
-    piece = 6
-    print(piece)
-
-def sqr_val_12():
-    pos_val = 12
-    piece = 6
-    print(piece)
-
-def sqr_val_13():
-    pos_val = 13
-    piece = 6
-    print(piece)
-
-def sqr_val_14():
-    pos_val = 14
-    piece = 6
-    print(piece)
-
-def sqr_val_15():
-    pos_val = 15
-    piece = 6
-    print(piece)
-
-def sqr_val_16():
-    pos_val = 16
-    piece = 6
-    print(piece)
-
-def sqr_val_17():
-    pos_val = 17
-    piece = 0
-    print(piece)
-
-def sqr_val_18():
-    pos_val = 18
-    piece = 0
-    print(piece)
-
-def sqr_val_19():
-    pos_val = 19
-    piece = 0
-    print(piece)
-
-def sqr_val_20():
-    pos_val = 20
-    piece = 0
-    print(piece)
-
-def sqr_val_21():
-    pos_val = 21
-    piece = 0 
-    print(piece)
-
-def sqr_val_22():
-    pos_val = 22
-    piece = 0
-    print(piece)
-
-def sqr_val_23():
-    pos_val = 23
-    piece = 0
-    print(piece)
-
-def sqr_val_24():
-    pos_val = 24
-    piece = 0
-    print(piece)
-
-def sqr_val_25():
-    pos_val = 25
-    piece = 0
-    print(piece)
-
-def sqr_val_26():
-    pos_val = 26
-    piece = 0
-    print(piece)
-
-def sqr_val_27():
-    pos_val = 27
-    piece = 0
-    print(piece)
-
-def sqr_val_28():
-    pos_val = 28
-    piece = 0
-    print(piece)
-
-def sqr_val_29():
-    pos_val = 29
-    piece = 0
-    print(piece)
-
-def sqr_val_30():
-    pos_val = 30
-    piece = 0
-    print(piece)
-
-def sqr_val_31():
-    pos_val = 31
-    piece = 0
-    print(piece)
-    
-
-def sqr_val_32():
-    pos_val = 32
-    piece = 0
-    print(piece)
-
-def sqr_val_33():
-    pos_val = 33
-    piece = 0
-    print(piece)
-
-def sqr_val_34():
-    pos_val = 34
-    piece = 0
-    print(piece)
-
-def sqr_val_35():
-    pos_val = 35
-    piece = 0
-    print(piece)
-
-def sqr_val_36():
-    pos_val = 36
-    piece = 0
-    print(piece)
-
-def sqr_val_37():
-    pos_val = 37
-    piece = 0
-    print(piece)
-
-
-def sqr_val_38():
-    pos_val = 38
-    piece = 0
-    print(piece)
-
-def sqr_val_39():
-    pos_val = 39
-    piece = 0
-    print(piece)
-
-def sqr_val_40():
-    pos_val = 40
-    piece = 0
-    print(piece)
-
-def sqr_val_41():
-    pos_val = 41
-    piece = 0
-    print(piece)
-
-def sqr_val_42():
-    pos_val = 42
-    piece = 0
-    print(piece)
-
-def sqr_val_43():
-    pos_val = 43
-    piece = 0
-    print(piece)
-
-def sqr_val_44():
-    pos_val = 44
-    piece = 0
-    print(piece)
-
-def sqr_val_45():
-    pos_val = 45
-    piece = 0
-    print(piece)
-
-def sqr_val_46():
-    pos_val = 46
-    piece = 0
-    print(piece)
-
-def sqr_val_47():
-    pos_val = 47
-    piece = 0
-    print(piece)
-
-def sqr_val_48():
-    pos_val = 48
-    piece = 0
-    print(piece)
-
-def sqr_val_49():
-    pos_val = 49
-    piece = 6
-    print(piece)
-
-def sqr_val_50():
-    pos_val = 50
-    piece = 6
-    print(piece)
-
-def sqr_val_51():
-    pos_val = 51
-    piece = 6
-    print(piece)
-
-def sqr_val_52():
-    pos_val = 52
-    piece = 6
-    print(piece)
-
-def sqr_val_53():
-    pos_val = 53
-    piece = 6
-    print(piece)
-
-def sqr_val_54():
-    pos_val = 54
-    piece = 6
-    print(piece)
-
-def sqr_val_55():
-    pos_val = 55
-    piece = 6
-    print(piece)
-
-def sqr_val_56():
-    pos_val = 56
-    piece = 6
-    print(piece)
-
-def sqr_val_57():
-    pos_val = 57
-    piece = 3
-    print(piece)
-
-def sqr_val_58():
-    pos_val = 58
-    piece = 5
-    print(piece)
-
-def sqr_val_59():
-    pos_val = 59
-    piece = 4
-    print(piece)
-
-def sqr_val_60():
-    pos_val = 60
-    piece = 1
-    print(piece)
-
-def sqr_val_61():
-    pos_val = 61
-    piece = 2
-    print(piece)
-
-def sqr_val_62():
-    pos_val = 62
-    piece = 4
-    print(piece)
-
-def sqr_val_63():
-    pos_val = 63
-    piece = 5
-    print(piece)
-    
-def sqr_val_64():
-    pos_val = 64
-    piece = 3
-    print(piece)
 
 
 if __name__ == "__main__":
