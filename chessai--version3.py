@@ -9,8 +9,8 @@ import pdb  # use pdb.set_trace() if you want to "step into" the code while it i
 IMAGEROOT = 'Pieces'  # directory for images
 LIGHT = '#FFFFFF'
 DARK = '#196F3D'
-WIDTH = 600  # in pixels
-HEIGHT = 600  # in pixels
+WIDTH = 800  # in pixels
+HEIGHT = 800  # in pixels
 NUMSQUARES = 8  # number of squares on chessboard
 
 def main():
