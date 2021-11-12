@@ -127,7 +127,6 @@ def main():
 
 
 
-
 # Taking user input 
 
 # Tracking the mouse 
@@ -140,15 +139,9 @@ def main():
         piece = state_of_board[y // 100][x //100]
         print(piece_dict[piece])
         
-    
     gui.bind("<Button>", click)
     
   
-
-
-
-
-   
     # Update the GUI
     gui.mainloop() 
 
