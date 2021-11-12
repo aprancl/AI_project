@@ -2,14 +2,15 @@
 # description: Chess...
 
 import tkinter as tk
+from PIL import ImageTk, Image
 import os
-from tkinter.constants import ANCHOR
+import pdb  # use pdb.set_trace() if you want to "step into" the code while it is running to do debugging
 
 IMAGEROOT = 'Pieces'  # directory for images
 LIGHT = '#FFFFFF'
 DARK = '#196F3D'
-WIDTH = 800  # in pixels
-HEIGHT = 800  # in pixels
+WIDTH = 600  # in pixels
+HEIGHT = 600  # in pixels
 NUMSQUARES = 8  # number of squares on chessboard
 
 def main():
@@ -51,6 +52,10 @@ def main():
 
 
     # Draw pieces on board
+    img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
+    img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
+    b_rook = ImageTk.PhotoImage(img)
+    canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
 
     w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
     w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
@@ -145,8 +150,6 @@ def main():
     # Update the GUI
     gui.mainloop() 
 
-
-# old code 
     # The chess board itself
     #squares(57-64)
 
@@ -306,6 +309,17 @@ def main():
     #       Another idea from playing with python shell //// probably easier
     # player_input = input()     
     # def eval(player_input):
+
+
+
+def draw():
+    '''Draw a specific piece on the board.'''
+    pass
+
+
+
+
+
 
 
 # square value assingment 
