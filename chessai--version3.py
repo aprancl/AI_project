@@ -52,12 +52,14 @@ def main():
 
 
     # Draw pieces on board
-    img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
-    img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
-    b_rook = ImageTk.PhotoImage(img)
-    canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
+    # img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
+    # img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
+    # b_rook = ImageTk.PhotoImage(img)
+    # canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
 
     # TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage 
+
+
     w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
     w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
     w_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_rook.svg.png"))
