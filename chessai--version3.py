@@ -51,14 +51,46 @@ def main():
 
 
 
+    state_of_board = [
+    [-3,-5,-4,-1,-2,-4,-5,-3],
+    [-6,-6,-6,-6,-6,-6,-6,-6],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 6, 6, 6, 6, 6, 6, 6, 6],
+    [ 3, 5, 4, 2, 1, 4, 5, 3]]
+
+    piece_dict = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
+                          -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
+
+
+
     # Draw pieces on board
-    # img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
-    # img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
-    # b_rook = ImageTk.PhotoImage(img)
-    # canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
+    img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
+    img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
+    b_rook = ImageTk.PhotoImage(img)
+    canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
 
-    # TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage 
+    # TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage //// within or outside of the function? - within? 
+    #  we want to, instead of just listing the image_objects, use a function to create the necesary image_object 
+    # this function will likely have to be referenced when pieces are places on the board
+    
+    
+    def imgObj_creator(pc_name):
+        pc = tk.PhotoImage(file=os.path.join(IMAGEROOT, pc_name + ".svg.png")) 
+        return pc 
 
+    # for row in state_of_board:
+    #     for col in row:
+    #         identifier = piece_dict[col]
+    #         imgObj_creator(identifier)
+
+
+
+
+
+    #  this creates the image obects that I will work with ///// I will likely not need this once there which piece 
 
     w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
     w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
@@ -73,33 +105,13 @@ def main():
     b_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_knight.svg.png"))
     b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
 
-    # Piece management
-
-    state_of_board = [
-    [-3,-5,-4,-1,-2,-4,-5,-3],
-    [-6,-6,-6,-6,-6,-6,-6,-6],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 6, 6, 6, 6, 6, 6, 6, 6],
-    [ 3, 5, 4, 2, 1, 4, 5, 3]]
-
-    piece_dict = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
-                          -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
-
+    
+    # this is actually placing pieces on the board 
     for row in range(len(state_of_board)):
         for col in range(len(state_of_board[row])):
-            whichpiece = piece_dict[state_of_board[row][col]]
+            whichpiece = piece_dict[state_of_board[row][col]]#imgObj_creator(piece_dict[state_of_board[row][col]])
             if whichpiece != 'none':
                 draw(canvas, eval(whichpiece), row, col)
-
-    # maybe make a loop to reconstruct the board instead of hardcoding the pieces to their locations as they are now 
-#    for horizontal in state_of_board:
-#        x = horizontal
-#        for vertical in horizontal:
-#            if vertical == 1:
-#                draw(vertical, x, col )
 
 
 
@@ -130,28 +142,7 @@ def move(canvas, piece, row, col, drow, dcol):
     # canvas.move()
     pass
 
-    # Function reprocessing 
-            # For every move, two functions needed to be redefined: the f(x) belonging to the square that the # pos_val is being moved from,
-            # and the f(x) of the square that the # pos_val is moving to.
-            
-            # More may technically need to be redefined in the future depending how I indicate where a # pos_val can move, but that is to be determined.
-
-
-    #       One idea on how to accomlish this. not sure if works.
-    # def eval("sqr_var_{}".format(some expression gathering user input)):
-
-    #       Another idea from playing with python shell //// probably easier
-    # player_input = input()     
-    # def eval(player_input):
-
-
-
-
-
-
-
-# square value assingment 
-    # Pieces: king = 1, queen = 2, rook = 3, bishop = 4, knight = 5, pawn = 6 
+   
 
 
 
