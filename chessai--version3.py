@@ -12,6 +12,20 @@ DARK = '#196F3D'
 WIDTH = 800  # in pixels
 HEIGHT = 800  # in pixels
 NUMSQUARES = 8  # number of squares on chessboard
+STATE_OF_BOARD = [
+    [-3,-5,-4,-1,-2,-4,-5,-3],
+    [-6,-6,-6,-6,-6,-6,-6,-6],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 0, 0, 0, 0, 0, 0, 0, 0],
+    [ 6, 6, 6, 6, 6, 6, 6, 6],
+    [ 3, 5, 4, 2, 1, 4, 5, 3]]
+PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
+                     -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
+HAND_EMPTY = ['yes']
+
+
 
 def main():
     # Create GUI and canvas
@@ -51,20 +65,6 @@ def main():
 
 
 
-    state_of_board = [
-    [-3,-5,-4,-1,-2,-4,-5,-3],
-    [-6,-6,-6,-6,-6,-6,-6,-6],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 0, 0, 0, 0, 0, 0, 0, 0],
-    [ 6, 6, 6, 6, 6, 6, 6, 6],
-    [ 3, 5, 4, 2, 1, 4, 5, 3]]
-
-    piece_dict = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
-                          -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
-
-
 
     # Draw pieces on board
     img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
@@ -78,16 +78,13 @@ def main():
     
     
     def imgObj_creator(pc_name):
-        pc = tk.PhotoImage(file=os.path.join(IMAGEROOT, pc_name + ".svg.png")) 
+        pc = tk.PhotoImage(file=os.path.join(IMAGEROOT, "{}.svg.png".format(pc_name))) 
         return pc 
 
-    # for row in state_of_board:
+    # for row in STATE_OF_BOARD:
     #     for col in row:
-    #         identifier = piece_dict[col]
+    #         identifier = PIECE_DICT[col]
     #         imgObj_creator(identifier)
-
-
-
 
 
     #  this creates the image obects that I will work with ///// I will likely not need this once there which piece 
@@ -107,27 +104,57 @@ def main():
 
     
     # this is actually placing pieces on the board 
-    for row in range(len(state_of_board)):
-        for col in range(len(state_of_board[row])):
-            whichpiece = piece_dict[state_of_board[row][col]]#imgObj_creator(piece_dict[state_of_board[row][col]])
+
+    for row in range(len(STATE_OF_BOARD)):
+        for col in range(len(STATE_OF_BOARD[row])):
+            whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] #imgObj_creator(PIECE_DICT[STATE_OF_BOARD[row][col]]) #
             if whichpiece != 'none':
                 draw(canvas, eval(whichpiece), row, col)
-
+                #draw(canvas, imgObj_creator(whichpiece), row, col)
 
 
 # Taking user input 
 
-# Tracking the mouse 
+# Taking user input 
 
-    def click(event):
+    
+    def pick_up_pc(event):
+        print(1)
+        global STATE_OF_BOARD
         x = int(event.x)
         y = int(event.y)
         output = [x, y]
         print(output)
-        piece = state_of_board[y // 100][x //100]
-        print(piece_dict[piece])
+        piece = STATE_OF_BOARD[y // 100][x //100]
+        print(PIECE_DICT[piece])
         
-    gui.bind("<Button>", click)
+        row = STATE_OF_BOARD[y // 100]
+        row.pop(piece)
+        row.insert(x //100, 0) # 0 is a 'none' piece, this should delete the piece
+        STATE_OF_BOARD.insert(y // 100, row)
+        print(STATE_OF_BOARD)
+
+            
+
+    
+
+    def put_down_pc(event):
+        print(2)
+        x = int(event.x)
+        y = int(event.y)
+        output = [x, y]
+        print(output)
+        piece = STATE_OF_BOARD[y // 100][x //100]
+        print(PIECE_DICT[piece])
+
+    gui.bind("<Button>", pick_up_pc)
+    gui.bind("<ButtonRelease-1>", put_down_pc)
+    
+    
+        
+
+
+
     
   
     # Update the GUI
@@ -139,10 +166,18 @@ def draw(canvas, piece, row, col):
 
 def move(canvas, piece, row, col, drow, dcol):
     # TODO: write this function!
-    # canvas.move()
+    # canvas.move(piece, piece.x, piece.y)
     pass
 
-   
+#   Ideally, the for loop used to construct the entire board should be in a function so that the process can be called when lifting and placing pieces
+# def board_construct():
+#     for row in range(len(STATE_OF_BOARD)):
+#         for col in range(len(STATE_OF_BOARD[row])):
+#             whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] #imgObj_creator(PIECE_DICT[STATE_OF_BOARD[row][col]]) #
+#             if whichpiece != 'none':
+                
+#                 draw(canvas, eval(whichpiece), row, col)
+#                 #draw(canvas, imgObj_creator(whichpiece), row, col)
 
 
 
