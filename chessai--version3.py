@@ -112,7 +112,8 @@ def main():
                # draw(canvas, imgObj_creator(whichpiece) , row, col)
     # NOTE END STEP 3: display previously defined photo images in relation to values in STATE_OF_BOARD [].
     
-
+    # NOTE BEGIN STEP 4: The piece moving proces
+        # NOTE BEGIN STEP 4.1: remove a clicked piece
     def pick_up_pc(event): # doesn't delete pieces exactly as intended, but it changes the position of pieces in STATE_OG_BOARD list. Regardless of accuracy, I just want to output changed to the board. 
         print(1)
         global STATE_OF_BOARD
@@ -128,9 +129,9 @@ def main():
         print(STATE_OF_BOARD)
         print(output)
         print(PIECE_DICT[piece])
-
+        
     
-
+        # NOTE BEGIN STEP 4.2: Place the previously moved piece
     def put_down_pc(event): # picked_up_pieces will be .appended() to a list and .poped() out of that list, which will be used as input for this function. 
         print(2)
         x = int(event.x)
@@ -143,8 +144,10 @@ def main():
 
     gui.bind("<Button>", pick_up_pc)
     gui.bind("<ButtonRelease-1>", put_down_pc)
+    # NOTE END STEP 4: The piece moving proces
 
 
+    # NOTE BEGIN STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
     for row in range(len(STATE_OF_BOARD)):
         for col in range(len(STATE_OF_BOARD[row])):
             whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
@@ -152,7 +155,7 @@ def main():
             if whichpiece != 'none':
                 draw(canvas, eval(whichpiece) , row, col) 
                # draw(canvas, imgObj_creator(whichpiece) , row, col)
-
+    # NOTE END STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
     
     
     # Update the GUI
@@ -161,7 +164,7 @@ def main():
 
 
 
-
+# NOTE functions 
 
 # TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage //// within or outside of the function? - within? 
     #  we want to, instead of just listing the image_objects, use a function to create the necesary image_object 
