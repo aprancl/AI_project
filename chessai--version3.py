@@ -25,6 +25,7 @@ PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w
                      -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
 
 
+
 # NOTE <-- indicates a major step in the program
 # ^ will be used to make comments easier to read by distinguishing primary and subordinate comments 
 
@@ -103,17 +104,25 @@ def main():
     
     
     # NOTE BEGIN STEP 3: display previously defined photo images in relation to values in STATE_OF_BOARD [].
+
+   
     for row in range(len(STATE_OF_BOARD)):
         for col in range(len(STATE_OF_BOARD[row])):
             whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
             # pdb.set_trace()
             if whichpiece != 'none':
                 draw(canvas, eval(whichpiece) , row, col) 
-               # draw(canvas, imgObj_creator(whichpiece) , row, col)
+            # draw(canvas, imgObj_creator(whichpiece) , row, col)
+    
+
+    # ideal: board_construction(STATE_OF_BOARD, PIECE_DICT)
+
+
     # NOTE END STEP 3: display previously defined photo images in relation to values in STATE_OF_BOARD [].
     
     # NOTE BEGIN STEP 4: The piece moving proces
         # NOTE BEGIN STEP 4.1: remove a clicked piece
+        print(STATE_OF_BOARD)
     def pick_up_pc(event): # doesn't delete pieces exactly as intended, but it changes the position of pieces in STATE_OG_BOARD list. Regardless of accuracy, I just want to output changed to the board. 
         print(1)
         global STATE_OF_BOARD
@@ -122,14 +131,14 @@ def main():
         y = int(event.y)
         output = [x, y]
         piece = STATE_OF_BOARD[y // 100][x //100]
-        row = STATE_OF_BOARD[y // 100]
-        row.pop(piece)
-        row.insert(x //100, 0) # 0 is a 'none' piece, this should delete the piece
+        row = STATE_OF_BOARD.pop(y // 100)
+        row.pop(x // 100)
+        row.insert(x //100, 0)
         STATE_OF_BOARD.insert(y // 100, row)
-        print(STATE_OF_BOARD)
+
         print(output)
         print(PIECE_DICT[piece])
-        
+        print(STATE_OF_BOARD)
     
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
     def put_down_pc(event): # picked_up_pieces will be .appended() to a list and .poped() out of that list, which will be used as input for this function. 
@@ -137,13 +146,20 @@ def main():
         x = int(event.x)
         y = int(event.y)
         output = [x, y]
-        print(output)
         piece = STATE_OF_BOARD[y // 100][x //100]
+        print(output)
         print(PIECE_DICT[piece])
+        print(STATE_OF_BOARD)
 
+    
 
     gui.bind("<Button>", pick_up_pc)
     gui.bind("<ButtonRelease-1>", put_down_pc)
+
+
+
+
+
     # NOTE END STEP 4: The piece moving proces
 
 
@@ -155,6 +171,10 @@ def main():
             if whichpiece != 'none':
                 draw(canvas, eval(whichpiece) , row, col) 
                # draw(canvas, imgObj_creator(whichpiece) , row, col)
+
+
+
+
     # NOTE END STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
     
     
@@ -170,7 +190,7 @@ def main():
     #  we want to, instead of just listing the image_objects, use a function to create the necesary image_object 
     # this function will likely have to be referenced when pieces are places on the board
     
-def imgObj_creator(pc_name):
+def imgObj_creator(pc_name): # 
     pc = tk.PhotoImage(file=os.path.join(IMAGEROOT, "{}.svg.png".format(pc_name))) 
     return pc # allows the invocation of this function to output the necessary image_object
 
@@ -179,12 +199,13 @@ def draw(canvas, piece, row, col):
 
 def move(canvas, piece, row, col, drow, dcol):
     # TODO: write this function!
-    # canvas.move(piece, piece.x, piece.y)
+    # canvas.move()
     pass
 
 #   Ideally, the for loop used to construct the entire board should be in a function so that the process can be called when lifting and placing pieces
-def board_construction(x): # the for loop I am referencing within this function is a process I want to initiate at multiple places throughout the program
-    global PIECE_DICT
+def board_construction(x, y): # the for loop I am referencing within this function is a process I want to initiate at multiple places throughout the program
+    # x i s the STATE_OF_BOARD
+    # y is the PIECE_DICT
     w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
     w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
     w_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_rook.svg.png"))
@@ -199,7 +220,7 @@ def board_construction(x): # the for loop I am referencing within this function 
     b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
     for row in range(len(x)):
         for col in range(len(x[row])):
-            whichpiece = PIECE_DICT[x[row][col]] 
+            whichpiece = y[x[row][col]] 
             # pdb.set_trace()
             if whichpiece != 'none':
                 #draw(canvas, eval(whichpiece) , row, col) # canvas is not defined 
