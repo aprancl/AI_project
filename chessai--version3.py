@@ -114,7 +114,6 @@ def main():
                 draw(canvas, eval(whichpiece) , row, col) 
             # draw(canvas, imgObj_creator(whichpiece) , row, col)
     
-
     # ideal: board_construction(STATE_OF_BOARD, PIECE_DICT)
 
 
@@ -157,9 +156,6 @@ def main():
     gui.bind("<ButtonRelease-1>", put_down_pc)
 
 
-
-
-
     # NOTE END STEP 4: The piece moving proces
 
 
@@ -180,8 +176,6 @@ def main():
     
     # Update the GUI
     gui.mainloop() 
-
-
 
 
 # NOTE functions 
