@@ -23,6 +23,7 @@ STATE_OF_BOARD = [
     [ 3, 5, 4, 2, 1, 4, 5, 3]]
 PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
                      -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
+PREVIOUS_PIECE = []
 
 
 
@@ -122,14 +123,16 @@ def main():
     # NOTE BEGIN STEP 4: The piece moving proces
         # NOTE BEGIN STEP 4.1: remove a clicked piece
         print(STATE_OF_BOARD)
-    def pick_up_pc(event): # doesn't delete pieces exactly as intended, but it changes the position of pieces in STATE_OG_BOARD list. Regardless of accuracy, I just want to output changed to the board. 
+    def pick_up_pc(event): 
         print(1)
         global STATE_OF_BOARD
         global COORDINATES
+        global PREVIOUS_PIECE
         x = int(event.x)
         y = int(event.y)
         output = [x, y]
         piece = STATE_OF_BOARD[y // 100][x //100]
+        PREVIOUS_PIECE.append(piece)
         row = STATE_OF_BOARD.pop(y // 100)
         row.pop(x // 100)
         row.insert(x //100, 0)
@@ -138,6 +141,7 @@ def main():
         print(output)
         print(PIECE_DICT[piece])
         print(STATE_OF_BOARD)
+        print(PREVIOUS_PIECE)
     
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
     def put_down_pc(event): # picked_up_pieces will be .appended() to a list and .poped() out of that list, which will be used as input for this function. 
@@ -184,7 +188,7 @@ def main():
     #  we want to, instead of just listing the image_objects, use a function to create the necesary image_object 
     # this function will likely have to be referenced when pieces are places on the board
     
-def imgObj_creator(pc_name): # 
+def imgObj_creator(pc_name): 
     pc = tk.PhotoImage(file=os.path.join(IMAGEROOT, "{}.svg.png".format(pc_name))) 
     return pc # allows the invocation of this function to output the necessary image_object
 
