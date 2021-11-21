@@ -137,19 +137,25 @@ def main():
         row.pop(x // 100)
         row.insert(x //100, 0)
         STATE_OF_BOARD.insert(y // 100, row)
-
         print(output)
         print(PIECE_DICT[piece])
         print(STATE_OF_BOARD)
         print(PREVIOUS_PIECE)
     
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
-    def put_down_pc(event): # picked_up_pieces will be .appended() to a list and .poped() out of that list, which will be used as input for this function. 
+    def put_down_pc(event): 
+        global STATE_OF_BOARD
+        global COORDINATES
+        global PREVIOUS_PIECE
         print(2)
         x = int(event.x)
         y = int(event.y)
         output = [x, y]
-        piece = STATE_OF_BOARD[y // 100][x //100]
+        piece = PREVIOUS_PIECE[-1]
+        row = STATE_OF_BOARD.pop(y //100)
+        row.pop(x //100)
+        row.insert(x // 100, piece)
+        STATE_OF_BOARD.insert(y // 100, row)
         print(output)
         print(PIECE_DICT[piece])
         print(STATE_OF_BOARD)
