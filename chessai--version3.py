@@ -103,7 +103,6 @@ def main():
     # NOTE END STEP 2: Create photo image objects to referecne throughout program 
 
     
-    
     # NOTE BEGIN STEP 3: display previously defined photo images in relation to values in STATE_OF_BOARD [].
 
    
@@ -141,7 +140,7 @@ def main():
         print(PIECE_DICT[piece])
         print(STATE_OF_BOARD)
         print(PREVIOUS_PIECE)
-    
+
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
     def put_down_pc(event): 
         global STATE_OF_BOARD
@@ -160,7 +159,6 @@ def main():
         print(PIECE_DICT[piece])
         print(STATE_OF_BOARD)
 
-    
 
     gui.bind("<Button>", pick_up_pc)
     gui.bind("<ButtonRelease-1>", put_down_pc)
@@ -171,15 +169,13 @@ def main():
 
     # NOTE BEGIN STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
     for row in range(len(STATE_OF_BOARD)):
+        print("wooooowowowoowowow") # method to check if code is running --> it is running, but it is doing so BEFORE the STATE_OF_BOARD list is changed. 
         for col in range(len(STATE_OF_BOARD[row])):
             whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
             # pdb.set_trace()
             if whichpiece != 'none':
                 draw(canvas, eval(whichpiece) , row, col) 
                # draw(canvas, imgObj_creator(whichpiece) , row, col)
-
-
-
 
     # NOTE END STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
     
