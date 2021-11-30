@@ -24,7 +24,7 @@ STATE_OF_BOARD = [
 PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
                      -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
 PREVIOUS_PIECE = []
-
+DEBUG = True
 
 
 # NOTE <-- indicates a major step in the program
@@ -121,7 +121,7 @@ def main():
     
     # NOTE BEGIN STEP 4: The piece moving proces
         # NOTE BEGIN STEP 4.1: remove a clicked piece
-        print(STATE_OF_BOARD)
+    showboard(STATE_OF_BOARD)
     def pick_up_pc(event): 
         print(1)
         global STATE_OF_BOARD
@@ -138,7 +138,7 @@ def main():
         STATE_OF_BOARD.insert(y // 100, row)
         print(output)
         print(PIECE_DICT[piece])
-        print(STATE_OF_BOARD)
+        showboard(STATE_OF_BOARD)
         print(PREVIOUS_PIECE)
 
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
@@ -157,7 +157,7 @@ def main():
         STATE_OF_BOARD.insert(y // 100, row)
         print(output)
         print(PIECE_DICT[piece])
-        print(STATE_OF_BOARD)
+        showboard(STATE_OF_BOARD)
 
 
     gui.bind("<Button>", pick_up_pc)
@@ -169,7 +169,7 @@ def main():
 
     # NOTE BEGIN STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
     for row in range(len(STATE_OF_BOARD)):
-        print("wooooowowowoowowow") # method to check if code is running --> it is running, but it is doing so BEFORE the STATE_OF_BOARD list is changed. 
+        # print("wooooowowowoowowow") # method to check if code is running --> it is running, but it is doing so BEFORE the STATE_OF_BOARD list is changed. 
         for col in range(len(STATE_OF_BOARD[row])):
             whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
             # pdb.set_trace()
@@ -189,7 +189,16 @@ def main():
 # TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage //// within or outside of the function? - within? 
     #  we want to, instead of just listing the image_objects, use a function to create the necesary image_object 
     # this function will likely have to be referenced when pieces are places on the board
-    
+
+def showboard(board):
+    '''Helper function to display the current state of the board.'''
+    print('=' * 24)
+    for row in board:
+        for col in row:
+            print("{0:>2}".format(col), end=" ")
+        print()
+    print('=' * 24)
+
 def imgObj_creator(pc_name): 
     pc = tk.PhotoImage(file=os.path.join(IMAGEROOT, "{}.svg.png".format(pc_name))) 
     return pc # allows the invocation of this function to output the necessary image_object
