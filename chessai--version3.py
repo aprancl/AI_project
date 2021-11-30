@@ -125,7 +125,6 @@ def main():
     def pick_up_pc(event): 
         print(1)
         global STATE_OF_BOARD
-        global COORDINATES
         global PREVIOUS_PIECE
         x = int(event.x)
         y = int(event.y)
@@ -144,7 +143,6 @@ def main():
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
     def put_down_pc(event): 
         global STATE_OF_BOARD
-        global COORDINATES
         global PREVIOUS_PIECE
         print(2)
         x = int(event.x)
