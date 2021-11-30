@@ -24,7 +24,7 @@ STATE_OF_BOARD = [
 PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
                      -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
 PREVIOUS_PIECE = []
-DEBUG = True
+DEBUG = True  # set to True to print stuff for debugging code
 
 
 # NOTE <-- indicates a major step in the program
@@ -121,9 +121,9 @@ def main():
     
     # NOTE BEGIN STEP 4: The piece moving proces
         # NOTE BEGIN STEP 4.1: remove a clicked piece
-    showboard(STATE_OF_BOARD)
+    if DEBUG: showboard(STATE_OF_BOARD)
     def pick_up_pc(event): 
-        print(1)
+        if DEBUG: print(1)
         global STATE_OF_BOARD
         global COORDINATES
         global PREVIOUS_PIECE
@@ -136,17 +136,19 @@ def main():
         row.pop(x // 100)
         row.insert(x //100, 0)
         STATE_OF_BOARD.insert(y // 100, row)
-        print(output)
-        print(PIECE_DICT[piece])
-        showboard(STATE_OF_BOARD)
-        print(PREVIOUS_PIECE)
+        
+        if DEBUG:
+            print(output)
+            print(PIECE_DICT[piece])
+            showboard(STATE_OF_BOARD)
+            print(PREVIOUS_PIECE)
 
         # NOTE BEGIN STEP 4.2: Place the previously moved piece
     def put_down_pc(event): 
         global STATE_OF_BOARD
         global COORDINATES
         global PREVIOUS_PIECE
-        print(2)
+        if DEBUG: print(2)
         x = int(event.x)
         y = int(event.y)
         output = [x, y]
@@ -155,9 +157,11 @@ def main():
         row.pop(x //100)
         row.insert(x // 100, piece)
         STATE_OF_BOARD.insert(y // 100, row)
-        print(output)
-        print(PIECE_DICT[piece])
-        showboard(STATE_OF_BOARD)
+        
+        if DEBUG:
+            print(output)
+            print(PIECE_DICT[piece])
+            showboard(STATE_OF_BOARD)
 
 
     gui.bind("<Button>", pick_up_pc)
