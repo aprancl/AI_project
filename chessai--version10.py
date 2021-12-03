@@ -26,9 +26,10 @@ PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w
 PREVIOUS_PIECE = []
 DEBUG = True  # set to True to print stuff for debugging code
 LAST_POSITION = []
+COUNTER = [1]
 
 def main(): 
-    
+    print(" --",COUNTER, "-- ")
     gui = tk.Tk()
     gui.geometry("{}x{}".format(WIDTH, HEIGHT))
     gui.title("Chess")
@@ -76,12 +77,21 @@ def main():
     b_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_knight.svg.png"))
     b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
 
-  
+    for row in range(len(STATE_OF_BOARD)):
+        for col in range(len(STATE_OF_BOARD[row])):
+            whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
+            # pdb.set_trace()
+            if whichpiece != 'none':
+                draw(canvas, eval(whichpiece) , row, col) 
+            #   draw(canvas, imgObj_creator(whichpiece) , row, col)
     
     if DEBUG: showboard(STATE_OF_BOARD)
     
     gui.bind("<Button>", pick_up_pc)
     gui.bind("<ButtonRelease-1>", put_down_pc)
+
+    x = COUNTER.pop(0)
+    COUNTER.append(x + 1)
 
     # Update the GUI
     gui.mainloop() 
@@ -89,7 +99,7 @@ def main():
 def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, index) 
 
     #white pawn
-    if abs(pc_name) == 6:
+    if pc_name == 6:
     
         if start_y < end_y: # stops white pawns from moving backwards 
             return False
@@ -105,7 +115,7 @@ def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, ind
                 return False
     
     #black pawn
-    if pc_name == -6:
+    elif pc_name == -6:
     
         if start_y > end_y: # stops black pawns from moving backwards 
             return False
@@ -121,11 +131,6 @@ def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, ind
             else:
                 return False
 
-
-
-
-
-    
     #knight 
     elif abs(pc_name) == 5:
         if abs(start_y - end_y) == 2 and abs(start_x - end_x) == 1: # permits the knight to move 2 spaces vertivally and 1 horizontally
@@ -239,7 +244,6 @@ def imgObj_creator(pc_name): # input is just a string
 
 def draw(canvas, piece, row, col): # piece in this case needs to be a photoimage 
     canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW)
-
 
 
 
