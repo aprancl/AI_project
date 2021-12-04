@@ -29,7 +29,7 @@ LAST_POSITION = []
 COUNTER = [1]
 
 def main(): 
-    print(" --",COUNTER, "-- ")
+    print(" --",COUNTER, "-- ") # a check to see if mainloop is looping through the code
     gui = tk.Tk()
     gui.geometry("{}x{}".format(WIDTH, HEIGHT))
     gui.title("Chess")
@@ -77,23 +77,19 @@ def main():
     b_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_knight.svg.png"))
     b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
 
-    for row in range(len(STATE_OF_BOARD)):
-        for col in range(len(STATE_OF_BOARD[row])):
-            whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
-            # pdb.set_trace()
-            if whichpiece != 'none':
-                draw(canvas, eval(whichpiece) , row, col) 
-            #   draw(canvas, imgObj_creator(whichpiece) , row, col)
-    
+   
+
+
     if DEBUG: showboard(STATE_OF_BOARD)
     
     gui.bind("<Button>", pick_up_pc)
     gui.bind("<ButtonRelease-1>", put_down_pc)
+    
 
     x = COUNTER.pop(0)
     COUNTER.append(x + 1)
 
-    # Update the GUI
+    gui.after(2000, update_board(canvas))
     gui.mainloop() 
 
 def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, index) 
@@ -174,9 +170,7 @@ def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, ind
         else:
             return False 
 
-
-
-            
+      
 def pick_up_pc(event): 
 
         global STATE_OF_BOARD
@@ -193,6 +187,7 @@ def pick_up_pc(event):
         row.pop(x // 100)
         row.insert(x //100, 0)
         STATE_OF_BOARD.insert(y // 100, row)
+
         
         if DEBUG:
             
@@ -202,6 +197,7 @@ def pick_up_pc(event):
             print(PREVIOUS_PIECE)
             print(LAST_POSITION)
             print(PIECE_DICT[piece])
+            
 
 
 def put_down_pc(event): 
@@ -215,10 +211,16 @@ def put_down_pc(event):
         y_cord = y //100
         piece = PREVIOUS_PIECE[-1]
         check = rules(piece, LAST_POSITION[-1][0], LAST_POSITION[-1][1], x_cord, y_cord )
-        row = STATE_OF_BOARD.pop(y //100)
-        row.pop(x //100)
-        row.insert(x // 100, piece)
-        STATE_OF_BOARD.insert(y // 100, row)
+        if check == True:
+            row = STATE_OF_BOARD.pop(y //100)
+            row.pop(x //100)
+            row.insert(x // 100, piece)
+            STATE_OF_BOARD.insert(y // 100, row)
+        else:
+            row = STATE_OF_BOARD.pop(LAST_POSITION[-1][1])
+            row.pop(LAST_POSITION[-1][0])
+            row.insert(LAST_POSITION[-1][0], piece)
+            STATE_OF_BOARD.insert(LAST_POSITION[-1][1], row)
         
         if DEBUG:
 
@@ -227,6 +229,47 @@ def put_down_pc(event):
             print(PIECE_DICT[piece])
             print(x_cord, y_cord)
             print(check)
+
+            
+
+def update_board(canvas):
+    # l_of_imgobjs = []
+    # ycounter = 0
+    # xcounter = 0
+    # for row in STATE_OF_BOARD:
+    #     for i in row:
+    #         whichpiece = PIECE_DICT[i]
+    #         piece = imgObj_creator(whichpiece)
+    #         l_of_imgobjs.append(piece)
+
+    #     for obj in l_of_imgobjs:
+    #         draw(canvas, obj, ycounter, xcounter)
+    #         xcounter += 1
+    #     ycounter += 1
+    
+
+    w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
+    w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
+    w_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_rook.svg.png"))
+    w_bishop = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_bishop.svg.png"))
+    w_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_knight.svg.png"))
+    w_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_pawn.svg.png"))
+    b_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_king.svg.png"))
+    b_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_queen.svg.png"))
+    b_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_rook.svg.png"))
+    b_bishop = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_bishop.svg.png"))
+    b_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_knight.svg.png"))
+    b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
+
+    for row in range(len(STATE_OF_BOARD)):
+        for col in range(len(STATE_OF_BOARD[row])):
+            whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
+            # pdb.set_trace()
+            if whichpiece != 'none':
+                draw(canvas, eval(whichpiece) , row, col) 
+            #   draw(canvas, imgObj_creator(whichpiece) , row, col)
+
+
 
 
 def showboard(board):
