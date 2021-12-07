@@ -108,7 +108,7 @@ def main():
     #gui.bind("<ButtonRelease-1>", update_board(canvas, STATE_OF_BOARD, img_obj_dict))
     
     
-    canvas.after(500, update_board) #(canvas, STATE_OF_BOARD, img_obj_dict))
+    canvas.after(500, update_board(canvas, STATE_OF_BOARD, img_obj_dict))
     #canvas.update()
     gui.mainloop() 
 
