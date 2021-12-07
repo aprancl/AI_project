@@ -27,7 +27,7 @@ PREVIOUS_PIECE = []
 DEBUG = True  # set to True to print stuff for debugging code
 LAST_POSITION = []
 COUNTER = [1]
-EVENT_LIST = [0]
+EVENT_LIST = ['<ButtonRelease event state=Button1 num=1 x=645 y=557>']
 
 def main(): 
     
@@ -87,10 +87,10 @@ def main():
     if DEBUG: showboard(STATE_OF_BOARD)
 
 
-    gui.after(100, event_tracker)
+    gui.bind("<ButtonRelease-1>", event_tracker)
     
     gui.bind("<Button>", pick_up_pc)
-    gui.bind("<ButtonRelease-1>", put_down_pc(EVENT_LIST[-1], canvas, STATE_OF_BOARD, img_obj_dict))
+    gui.bind("<ButtonRelease-1>", put_down_pc(eval(EVENT_LIST[-1]), canvas, STATE_OF_BOARD, img_obj_dict))
     #gui.bind("<ButtonRelease-1>", update_board(canvas, STATE_OF_BOARD, img_obj_dict))
     
 
@@ -182,6 +182,7 @@ def event_tracker(event):
     global EVENT_LIST
     x  = len(EVENT_LIST)
     EVENT_LIST.append(event)
+
     if len(EVENT_LIST) > x:
         return True 
     else:
