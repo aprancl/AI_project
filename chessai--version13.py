@@ -39,7 +39,7 @@ def main():
 
     # Add button
     btn_0  = tk.Button(gui, text = "Chess 2", command = chess_2)
-    btn_0.pack(side = 'top')
+    btn_0.pack(side = 'left')
     
     # Draw pieces
     
@@ -66,15 +66,13 @@ def main():
                     'b_king': b_king, 'b_queen': b_queen, 'b_rook': b_rook, 'b_bishop': b_bishop, 'b_knight': b_knight, 'b_pawn': b_pawn }
     
     update_board(canvas, STATE_OF_BOARD, img_obj_dict)
-    
+    #pdb.set_trace()
     if DEBUG: showboard(STATE_OF_BOARD)
 
     # Add event functions
     canvas.bind("<Button>", lambda event: pick_up_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION))
     canvas.bind("<ButtonRelease-1>", lambda event: put_down_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION, canvas, img_obj_dict))
-    #gui.bind("<ButtonRelease-1>", update_board(canvas, STATE_OF_BOARD, img_obj_dict))
-    # canvas.after(500, update_board(canvas, STATE_OF_BOARD, img_obj_dict)) #(canvas, STATE_OF_BOARD, img_obj_dict))
-    #canvas.update()
+    #pdb.set_trace()
 
     # Run the main loop
     gui.mainloop() 
@@ -254,6 +252,8 @@ def put_down_pc(event, state, prev_piece, last_pos, canvas, img_obj_dict):
 
 def update_board(canvas, state_of_board, img_obj_dict):
     print(" --",COUNTER, "-- ") # check for the nth iteration 
+    for i in canvas.find_withtag('old'):
+         canvas.delete(i)
     for row in range(len(state_of_board)):
         for col in range(len(state_of_board[row])):
             whichpiece = PIECE_DICT[state_of_board[row][col]] 
@@ -261,6 +261,14 @@ def update_board(canvas, state_of_board, img_obj_dict):
             if whichpiece != 'none':
                 draw(canvas, img_obj_dict[whichpiece] , row, col) 
             #   draw(canvas, imgObj_creator(whichpiece) , row, col)
+
+
+    
+
+
+
+    
+
     x = COUNTER.pop(0)
     COUNTER.append(x + 1)
     #canvas.bind("<ButtonRelease-1>", update_board(canvas, STATE_OF_BOARD, img_obj_dict))
@@ -286,8 +294,8 @@ def imgObj_creator(pc_name): # input is just a string
     return pc # allows the invocation of this function to output the necessary image_object
 
 def draw(canvas, piece, row, col): # piece in this case needs to be a photoimage 
-    canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW)
-    
+    canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW, tag= 'old')    #PIECE_DICT[STATE_OF_BOARD[row][col]])
+    #pdb.set_trace()
 def chess_2():
     IMAGEROOT.append("Pieces_2")
 
