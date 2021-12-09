@@ -40,10 +40,28 @@ def main():
     # Draw squares on board
     drawboard(canvas)
 
-    # Add button
-    btn_0  = tk.Button(gui, text = "Chess 2", command = chess_2)
-    btn_0.pack(side = 'left')
     
+    # tailor user experience through user input 
+        # play alone or with ai?
+    single_player = input("Would you like to play against the computer?: ").lower()
+    while single_player[0] != 'y' and single_player[0] != 'n':
+        print("you must answer (yes) or (no)")
+        single_player = input("Would you like to play against the computer?: ").lower()
+    if single_player[0] == 'y':
+        single_player = True
+    else:
+        single_player = False
+
+        # play normal chess or chess 2?
+    normal = input("Would you like to play normal chess?: ")
+    while normal[0] != 'y' and normal[0] != 'n':
+        print("you must answer (yes) or (no)")
+        normal = input("Would you like to play normal chess?: ")
+    if normal[0] == 'n':
+        IMAGEROOT.append('Pieces_2')
+    else:
+        pass
+
     # Draw pieces
     
     pc_names = ['w_king', 'w_queen', 'w_rook', 'w_bishop', 'w_knight', 'w_pawn', 
@@ -72,18 +90,12 @@ def main():
     #pdb.set_trace()
     if DEBUG: showboard(STATE_OF_BOARD)
 
+   
+
     # Add event functions
-    single_player = input("Would you like to play against the computer?: ").lower()
-    while single_player[0] != 'y' and single_player[0] != 'n':
-        print("you must answer (yes) or (no)")
-        single_player = input("Would you like to play against the computer?: ").lower()
-    if single_player[0] == 'y':
-        single_player = True
-    else:
-        single_player = False
     canvas.bind("<Button>", lambda event: pick_up_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION))
     canvas.bind("<ButtonRelease-1>", lambda event: put_down_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION, canvas, img_obj_dict, single_player))
-    #pdb.set_trace()
+
 
     # Run the main loop
     gui.mainloop() 
@@ -284,26 +296,36 @@ def ai_move(state, canvas, img_obj_dict, ai_last_pos, ai_last_pc):
     state.insert(y_cord, row)
     ai_last_pc.append(pc)
     
-    # keep placing it randomly until a legal move is found
-    # pending = 1 
-    # while pending != 0:
+    #keep placing it randomly until a legal move is found
+    pending = 1 
+    counter = 0
+    # while pending != 0 and counter <= 100:
     #     x_new = random.randrange(701)
     #     y_new = random.randrange(501)
     #     x_cord_new = x //100
     #     y_cord_new = y //100
     #     check = rules(ai_last_pc[-1],ai_last_pos[-1][0], ai_last_pos[-1][1], x_cord_new, y_cord_new )
-    #     #pdb.set_trace()
+    
     #     if check == True:
     #         pending = 0
     #     else:
     #         pending = 1 
+    #         counter += 1
+
+    #     if counter > 100:
+    #         # Place the piece
+    #         row = state.pop(y_cord_new)
+    #         row.pop(x_cord_new)
+    #         row.insert(x_cord_new, ai_last_pc[-1])
+    #         state.insert(y_cord_new, row)
+    #         break
     x_new = random.randrange(701)
     y_new = random.randrange(501)
     x_cord_new = x_new //100
     y_cord_new = y_new //100
     
         
-    #place the piece
+    # place the piece
     row = state.pop(y_cord_new)
     row.pop(x_cord_new)
     row.insert(x_cord_new, ai_last_pc[-1])
