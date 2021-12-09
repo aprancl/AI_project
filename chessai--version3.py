@@ -26,19 +26,8 @@ PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w
 PREVIOUS_PIECE = []
 DEBUG = True  # set to True to print stuff for debugging code
 
-
-# NOTE <-- indicates a major step in the program
-# ^ will be used to make comments easier to read by distinguishing primary and subordinate comments 
-
-# potentially move this out here to be able to reference <canvas> variable in board_construction() function
-# gui = tk.Tk()
-# gui.geometry("{}x{}".format(WIDTH, HEIGHT))
-# gui.title("Chess")
-# canvas = tk.Canvas(gui, width=WIDTH, height=HEIGHT)
-# canvas.pack()
-
 def main(): 
-    # NOTE BEGIN STEP 1: Create GUI and canvas
+    
     gui = tk.Tk()
     gui.geometry("{}x{}".format(WIDTH, HEIGHT))
     gui.title("Chess")
@@ -72,21 +61,7 @@ def main():
                 x0, y0 = col * wid, row * hei  # coordinates of top-left corner of square
                 x1, y1 = (col + 1) * wid, (row + 1) * hei  # coordinates of bottom-right corner of square
                 canvas.create_rectangle(x0, y0, x1, y1, fill=clr, outline=clr)
-        # NOTE END STEP 1: Create GUI and canvas
-
-
-    # Draw pieces on board
-
-    # i'm not sure if this needs to stay anymore 
-    # img = Image.open(os.path.join(IMAGEROOT, "b_rook.svg.png")).convert('RGBA')
-    # img = img.resize((int(0.75 * wid), int(0.75 * hei)))  # resize based on a percentage of the size of each square
-    # b_rook = ImageTk.PhotoImage(img)
-    # canvas.create_image(wid / 2, hei / 2, image=b_rook, anchor=tk.CENTER)
-
-    
-    
-    # NOTE BEGIN STEP 2: Create photo image objects to referecne throughout program 
-    #  list of photo image objects ///// I will likely not need this once the imgObj_creator() works 
+       
     w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
     w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
     w_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_rook.svg.png"))
@@ -100,12 +75,6 @@ def main():
     b_knight = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_knight.svg.png"))
     b_pawn = tk.PhotoImage(file=os.path.join(IMAGEROOT, "b_pawn.svg.png"))
 
-    # NOTE END STEP 2: Create photo image objects to referecne throughout program 
-
-    
-    # NOTE BEGIN STEP 3: display previously defined photo images in relation to values in STATE_OF_BOARD [].
-
-   
     for row in range(len(STATE_OF_BOARD)):
         for col in range(len(STATE_OF_BOARD[row])):
             whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
@@ -114,15 +83,24 @@ def main():
                 draw(canvas, eval(whichpiece) , row, col) 
             # draw(canvas, imgObj_creator(whichpiece) , row, col)
     
-    # ideal: board_construction(STATE_OF_BOARD, PIECE_DICT)
-
-
-    # NOTE END STEP 3: display previously defined photo images in relation to values in STATE_OF_BOARD [].
     
-    # NOTE BEGIN STEP 4: The piece moving proces
-        # NOTE BEGIN STEP 4.1: remove a clicked piece
     if DEBUG: showboard(STATE_OF_BOARD)
-    def pick_up_pc(event): 
+    
+    gui.bind("<Button>", pick_up_pc)
+    gui.bind("<ButtonRelease-1>", put_down_pc)
+
+    # Update the GUI
+    gui.mainloop() 
+
+
+
+
+# NOTE functions 
+
+# TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage //// within or outside of the function? - within? 
+
+
+def pick_up_pc(event): 
         if DEBUG: print(1)
         global STATE_OF_BOARD
         global PREVIOUS_PIECE
@@ -142,8 +120,7 @@ def main():
             showboard(STATE_OF_BOARD)
             print(PREVIOUS_PIECE)
 
-        # NOTE BEGIN STEP 4.2: Place the previously moved piece
-    def put_down_pc(event): 
+def put_down_pc(event): 
         global STATE_OF_BOARD
         global PREVIOUS_PIECE
         if DEBUG: print(2)
@@ -162,36 +139,6 @@ def main():
             showboard(STATE_OF_BOARD)
 
 
-    gui.bind("<Button>", pick_up_pc)
-    gui.bind("<ButtonRelease-1>", put_down_pc)
-
-
-    # NOTE END STEP 4: The piece moving proces
-
-
-    # NOTE BEGIN STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
-    for row in range(len(STATE_OF_BOARD)):
-        # print("wooooowowowoowowow") # method to check if code is running --> it is running, but it is doing so BEFORE the STATE_OF_BOARD list is changed. 
-        for col in range(len(STATE_OF_BOARD[row])):
-            whichpiece = PIECE_DICT[STATE_OF_BOARD[row][col]] 
-            # pdb.set_trace()
-            if whichpiece != 'none':
-                draw(canvas, eval(whichpiece) , row, col) 
-               # draw(canvas, imgObj_creator(whichpiece) , row, col)
-
-    # NOTE END STEP 5: Update the board based on new changes to the STATE_OF_BOARD list 
-    
-    
-    # Update the GUI
-    gui.mainloop() 
-
-
-# NOTE functions 
-
-# TODO: Make function where input is string (e.g. "w_king") and output is tk.PhotoImage //// within or outside of the function? - within? 
-    #  we want to, instead of just listing the image_objects, use a function to create the necesary image_object 
-    # this function will likely have to be referenced when pieces are places on the board
-
 def showboard(board):
     '''Helper function to display the current state of the board.'''
     print('=' * 24)
@@ -208,15 +155,9 @@ def imgObj_creator(pc_name):
 def draw(canvas, piece, row, col):
     canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW)
 
-def move(canvas, piece, row, col, drow, dcol):
-    # TODO: write this function!
-    # canvas.move()
-    pass
 
-#   Ideally, the for loop used to construct the entire board should be in a function so that the process can be called when lifting and placing pieces
-def board_construction(x, y): # the for loop I am referencing within this function is a process I want to initiate at multiple places throughout the program
-    # x i s the STATE_OF_BOARD
-    # y is the PIECE_DICT
+def board_construction(x, y):
+    
     w_king = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_king.svg.png"))
     w_queen = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_queen.svg.png"))
     w_rook = tk.PhotoImage(file=os.path.join(IMAGEROOT, "w_rook.svg.png"))
