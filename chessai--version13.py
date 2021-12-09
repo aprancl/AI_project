@@ -296,46 +296,17 @@ def ai_move(state, canvas, img_obj_dict, ai_last_pos, ai_last_pc):
     state.insert(y_cord, row)
     ai_last_pc.append(pc)
     
-    #keep placing it randomly until a legal move is found
-    pending = 1 
-    counter = 0
-    # while pending != 0 and counter <= 100:
-    #     x_new = random.randrange(701)
-    #     y_new = random.randrange(501)
-    #     x_cord_new = x //100
-    #     y_cord_new = y //100
-    #     check = rules(ai_last_pc[-1],ai_last_pos[-1][0], ai_last_pos[-1][1], x_cord_new, y_cord_new )
-    
-    #     if check == True:
-    #         pending = 0
-    #     else:
-    #         pending = 1 
-    #         counter += 1
-
-    #     if counter > 100:
-    #         # Place the piece
-    #         row = state.pop(y_cord_new)
-    #         row.pop(x_cord_new)
-    #         row.insert(x_cord_new, ai_last_pc[-1])
-    #         state.insert(y_cord_new, row)
-    #         break
+    #Find a random square
     x_new = random.randrange(701)
     y_new = random.randrange(501)
     x_cord_new = x_new //100
     y_cord_new = y_new //100
     
-        
     # place the piece
     row = state.pop(y_cord_new)
     row.pop(x_cord_new)
     row.insert(x_cord_new, ai_last_pc[-1])
     state.insert(y_cord_new, row)
-    
-    # else:
-    #     row = state.pop(ai_last_pos[-1][1])
-    #     row.pop(ai_last_pos[-1][0])
-    #     row.insert(ai_last_pos[-1][0], piece)
-    #     state.insert(ai_last_pos[-1][1], row)
     
 
 def update_board(canvas, state_of_board, img_obj_dict):
