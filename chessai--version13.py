@@ -2,6 +2,7 @@
 # description: Chess...
 
 import tkinter as tk
+import random
 from PIL import ImageTk, Image
 import os
 import pdb  # use pdb.set_trace() if you want to "step into" the code while it is running to do debugging
@@ -28,6 +29,8 @@ PREVIOUS_PIECE = []
 DEBUG = True  # set to True to print stuff for debugging code
 LAST_POSITION = []
 COUNTER = [1]
+AI_LAST_POSITION = []
+AI_LAST_PC = []
 
 
 def main(): 
@@ -70,8 +73,16 @@ def main():
     if DEBUG: showboard(STATE_OF_BOARD)
 
     # Add event functions
+    single_player = input("Would you like to play against the computer?: ").lower()
+    while single_player[0] != 'y' and single_player[0] != 'n':
+        print("you must answer (yes) or (no)")
+        single_player = input("Would you like to play against the computer?: ").lower()
+    if single_player[0] == 'y':
+        single_player = True
+    else:
+        single_player = False
     canvas.bind("<Button>", lambda event: pick_up_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION))
-    canvas.bind("<ButtonRelease-1>", lambda event: put_down_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION, canvas, img_obj_dict))
+    canvas.bind("<ButtonRelease-1>", lambda event: put_down_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION, canvas, img_obj_dict, single_player))
     #pdb.set_trace()
 
     # Run the main loop
@@ -217,7 +228,7 @@ def pick_up_pc(event, state, prev_piece, last_pos):
             print(PIECE_DICT[piece])
 
 
-def put_down_pc(event, state, prev_piece, last_pos, canvas, img_obj_dict):
+def put_down_pc(event, state, prev_piece, last_pos, canvas, img_obj_dict, single_player):
     '''Describe this.'''
     # pdb.set_trace()
     if DEBUG: print(2)
@@ -228,26 +239,81 @@ def put_down_pc(event, state, prev_piece, last_pos, canvas, img_obj_dict):
     y_cord = y //100
     piece = prev_piece[-1]
     check = rules(piece, last_pos[-1][0], last_pos[-1][1], x_cord, y_cord )
+    
     if check == True:
         row = state.pop(y //100)
         row.pop(x //100)
         row.insert(x // 100, piece)
         state.insert(y // 100, row)
-        #update_board(canvas, STATE_OF_BOARD, img_obj_dict)
+        
     else:
         row = state.pop(last_pos[-1][1])
         row.pop(last_pos[-1][0])
         row.insert(last_pos[-1][0], piece)
         state.insert(last_pos[-1][1], row)
     
-    update_board(canvas, state, img_obj_dict)
 
+    
+    if single_player == True:
+        ai_move(STATE_OF_BOARD, canvas, img_obj_dict, AI_LAST_POSITION, AI_LAST_PC)
+    
     if DEBUG:
         showboard(state)
         print(2)
         print(PIECE_DICT[piece])
         print(x_cord, y_cord)
         print(check)
+
+    update_board(canvas, state, img_obj_dict)
+    
+
+    
+def ai_move(state, canvas, img_obj_dict, ai_last_pos, ai_last_pc):
+    '''Make random move'''
+    #find random square
+    x = random.randrange(700)
+    y = random.randrange(200)
+    x_cord = x //100
+    y_cord = y //100
+    ai_last_pos.append([x_cord, y_cord])
+    
+    #pick up the piece
+    row = state.pop(y_cord)
+    pc = row.pop(x_cord)
+    row.insert(x_cord, 0)
+    state.insert(y_cord, row)
+    ai_last_pc.append(pc)
+    
+    # keep placing it randomly until a legal move is found
+    # pending = 1 
+    # while pending != 0:
+    #     x_new = random.randrange(701)
+    #     y_new = random.randrange(501)
+    #     x_cord_new = x //100
+    #     y_cord_new = y //100
+    #     check = rules(ai_last_pc[-1],ai_last_pos[-1][0], ai_last_pos[-1][1], x_cord_new, y_cord_new )
+    #     #pdb.set_trace()
+    #     if check == True:
+    #         pending = 0
+    #     else:
+    #         pending = 1 
+    x_new = random.randrange(701)
+    y_new = random.randrange(501)
+    x_cord_new = x_new //100
+    y_cord_new = y_new //100
+    
+        
+    #place the piece
+    row = state.pop(y_cord_new)
+    row.pop(x_cord_new)
+    row.insert(x_cord_new, ai_last_pc[-1])
+    state.insert(y_cord_new, row)
+    
+    # else:
+    #     row = state.pop(ai_last_pos[-1][1])
+    #     row.pop(ai_last_pos[-1][0])
+    #     row.insert(ai_last_pos[-1][0], piece)
+    #     state.insert(ai_last_pos[-1][1], row)
     
 
 def update_board(canvas, state_of_board, img_obj_dict):
@@ -261,12 +327,6 @@ def update_board(canvas, state_of_board, img_obj_dict):
             if whichpiece != 'none':
                 draw(canvas, img_obj_dict[whichpiece] , row, col) 
             #   draw(canvas, imgObj_creator(whichpiece) , row, col)
-
-
-    
-
-
-
     
 
     x = COUNTER.pop(0)
