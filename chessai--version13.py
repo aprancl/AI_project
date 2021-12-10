@@ -1,15 +1,15 @@
-# chessai--version3.py
-# description: Chess...
+# chessai--version13.py
+# description: This program displays a chess board, and allows the user to play another user nearby
+#              or to play against a rather unintelligent artificial intelligence. 
 
 import tkinter as tk
 import random
 from PIL import ImageTk, Image
 import os
-import pdb  # use pdb.set_trace() if you want to "step into" the code while it is running to do debugging
-
+import pdb  
 
 IMAGEROOT = ['Pieces']  # directory for images
-LIGHT = '#FFFFFF'
+LIGHT = '#FFFFFF' # for squares
 DARK = '#196F3D'
 WIDTH = 800  # in pixels
 HEIGHT = 800  # in pixels
@@ -25,13 +25,13 @@ STATE_OF_BOARD = [
     [ 3, 5, 4, 2, 1, 4, 5, 3]]
 PIECE_DICT = { 0:'none', 1:'w_king', 2:'w_queen', 3:'w_rook', 4:'w_bishop', 5:'w_knight', 6:'w_pawn', 
                      -1:'b_king',-2:'b_queen', -3:'b_rook', -4:'b_bishop', -5:'b_knight', -6:'b_pawn'}
+# variables necessary for moving pieces
 PREVIOUS_PIECE = []
 DEBUG = True  # set to True to print stuff for debugging code
 LAST_POSITION = []
 COUNTER = [1]
 AI_LAST_POSITION = []
 AI_LAST_PC = []
-
 
 def main(): 
     # Setup the GUI
@@ -40,7 +40,6 @@ def main():
     # Draw squares on board
     drawboard(canvas)
 
-    
     # tailor user experience through user input 
         # play alone or with ai?
     single_player = input("Would you like to play against the computer?: ").lower()
@@ -63,7 +62,6 @@ def main():
         pass
 
     # Draw pieces
-    
     pc_names = ['w_king', 'w_queen', 'w_rook', 'w_bishop', 'w_knight', 'w_pawn', 
                 'b_king', 'b_queen', 'b_rook', 'b_bishop', 'b_knight', 'b_pawn']
     img_obj_list = []
@@ -87,33 +85,27 @@ def main():
                     'b_king': b_king, 'b_queen': b_queen, 'b_rook': b_rook, 'b_bishop': b_bishop, 'b_knight': b_knight, 'b_pawn': b_pawn }
     
     update_board(canvas, STATE_OF_BOARD, img_obj_dict)
-    #pdb.set_trace()
-    if DEBUG: showboard(STATE_OF_BOARD)
 
-   
+    if DEBUG: showboard(STATE_OF_BOARD)
 
     # Add event functions
     canvas.bind("<Button>", lambda event: pick_up_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION))
     canvas.bind("<ButtonRelease-1>", lambda event: put_down_pc(event, STATE_OF_BOARD, PREVIOUS_PIECE, LAST_POSITION, canvas, img_obj_dict, single_player))
 
-
     # Run the main loop
     gui.mainloop() 
 
-
 def setup():
-    '''Create the tkinter gui and canvas for drawing stuff.'''
+    '''Create the tkinter gui and canvas to draw the board and pieces in.'''
     gui = tk.Tk()
     gui.geometry("{}x{}".format(WIDTH, HEIGHT))
     gui.title("Chess")
     canvas = tk.Canvas(gui, width=WIDTH, height=HEIGHT)
     canvas.pack()
-
     return gui, canvas
 
-
 def drawboard(canvas):
-    '''Draw the squares on the tkinter canvas.'''
+    '''Draw squares on the tkinter canvas.'''
     wid = WIDTH / NUMSQUARES  # width of each square, in pixels
     hei = HEIGHT / NUMSQUARES  # height of each square, in pixels
     
@@ -139,9 +131,8 @@ def drawboard(canvas):
                 x1, y1 = (col + 1) * wid, (row + 1) * hei  # coordinates of bottom-right corner of square
                 canvas.create_rectangle(x0, y0, x1, y1, fill=clr, outline=clr)
 
-
 def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, index) 
-
+    '''Determines whether a move is legal or not'''
     #white pawn
     if pc_name == 6:
     
@@ -209,28 +200,35 @@ def rules(pc_name, start_x, start_y, end_x, end_y): # (integer input, index, ind
     
     #King 
     elif abs(pc_name) == 1:
-        if (abs(start_x - end_x) == 1) and start_y == end_y:
+        if (abs(start_x - end_x) == 1) and start_y == end_y: # allows the king to move up once on the verticle axis
             return True 
-        elif (abs(start_y - end_y) == 1) and start_x == end_x:
+        elif (abs(start_y - end_y) == 1) and start_x == end_x: # allows the king to move up once on the horizontal axis
             return True 
-        elif abs(start_x - end_x) == abs(start_y - end_y) and abs(start_x - end_x) == 1 and abs(start_y - end_y) == 1:
+        elif abs(start_x - end_x) == abs(start_y - end_y) and abs(start_x - end_x) == 1 and abs(start_y - end_y) == 1: #allows for diagonl movements, one square per move
             return True 
         else:
             return False 
 
-
 def pick_up_pc(event, state, prev_piece, last_pos):
+        '''Deletes a piece that is clicked on, and saves it until it is placed '''
+
+        # locate the clicked square on the board, and document it for later use
         x = int(event.x)
         y = int(event.y)
         x_cord = x // 100
         y_cord = y // 100
         last_pos.append([x_cord, y_cord])
+
+        #find out what piece is on the square that was clicked, and document it 
         piece = state[y_cord][x_cord]
         prev_piece.append(piece)
+
+        #Pick up that piece 
         row = state.pop(y // 100)
         row.pop(x // 100)
         row.insert(x //100, 0)
-        state.insert(y // 100, row)        
+        state.insert(y // 100, row)  
+        # display relevant information in the terminal       
         if DEBUG:
             showboard(state)
             print(1)
@@ -239,51 +237,47 @@ def pick_up_pc(event, state, prev_piece, last_pos):
             print(last_pos)
             print(PIECE_DICT[piece])
 
-
 def put_down_pc(event, state, prev_piece, last_pos, canvas, img_obj_dict, single_player):
-    '''Describe this.'''
-    # pdb.set_trace()
-    if DEBUG: print(2)
-    #pdb.set_trace()
+    '''Places pieces down when certain conditions are met, and calls for AI move.'''
+    # locate the desired square to place the piece 
     x = int(event.x)
     y = int(event.y)
     x_cord = x //100
     y_cord = y //100
+
+    #judge whether the move is legal
     piece = prev_piece[-1]
     check = rules(piece, last_pos[-1][0], last_pos[-1][1], x_cord, y_cord )
     
-    if check == True:
+    if check == True: # if so... place the piece down
         row = state.pop(y //100)
         row.pop(x //100)
         row.insert(x // 100, piece)
         state.insert(y // 100, row)
-        
-    else:
+    
+    else: # if not... ignore the move 
         row = state.pop(last_pos[-1][1])
         row.pop(last_pos[-1][0])
         row.insert(last_pos[-1][0], piece)
         state.insert(last_pos[-1][1], row)
     
-
-    
+    # call for AI move 
     if single_player == True:
         ai_move(STATE_OF_BOARD, canvas, img_obj_dict, AI_LAST_POSITION, AI_LAST_PC)
     
-    if DEBUG:
+    if DEBUG: # display relevant information in the terminal
         showboard(state)
         print(2)
         print(PIECE_DICT[piece])
         print(x_cord, y_cord)
         print(check)
-
+    # display changes to the board on the gui
     update_board(canvas, state, img_obj_dict)
     
-
-    
 def ai_move(state, canvas, img_obj_dict, ai_last_pos, ai_last_pc):
-    '''Make random move'''
-    #find random square
-    x = random.randrange(700)
+    '''AI makes a random move that is not bound by the rules of the game.'''
+    #find random square within the first 3 rows and all 8 columns
+    x = random.randrange(800)
     y = random.randrange(200)
     x_cord = x //100
     y_cord = y //100
@@ -296,9 +290,11 @@ def ai_move(state, canvas, img_obj_dict, ai_last_pos, ai_last_pc):
     state.insert(y_cord, row)
     ai_last_pc.append(pc)
     
+    # a loop is necessary to generate random desitnation squares and to check them one by one, but this causes the program to crash after nth iterations. 
+
     #Find a random square
-    x_new = random.randrange(701)
-    y_new = random.randrange(501)
+    x_new = random.randrange(800)
+    y_new = random.randrange(550)
     x_cord_new = x_new //100
     y_cord_new = y_new //100
     
@@ -308,31 +304,22 @@ def ai_move(state, canvas, img_obj_dict, ai_last_pos, ai_last_pc):
     row.insert(x_cord_new, ai_last_pc[-1])
     state.insert(y_cord_new, row)
     
-
 def update_board(canvas, state_of_board, img_obj_dict):
-    print(" --",COUNTER, "-- ") # check for the nth iteration 
-    for i in canvas.find_withtag('old'):
+    '''Display changed made to the STATE_OF_BOARD list by deleting old pieces and placing new ones.'''
+
+    print(" --",COUNTER, "-- ") # check for update_board() being called 
+    for i in canvas.find_withtag('old'): #Delete all pieces with the tag 'old'
          canvas.delete(i)
+    # place pieces square by square 
     for row in range(len(state_of_board)):
         for col in range(len(state_of_board[row])):
             whichpiece = PIECE_DICT[state_of_board[row][col]] 
             # pdb.set_trace()
             if whichpiece != 'none':
                 draw(canvas, img_obj_dict[whichpiece] , row, col) 
-            #   draw(canvas, imgObj_creator(whichpiece) , row, col)
-    
-
     x = COUNTER.pop(0)
     COUNTER.append(x + 1)
-    #canvas.bind("<ButtonRelease-1>", update_board(canvas, STATE_OF_BOARD, img_obj_dict))
-    #canvas.after(500, update_board(canvas, STATE_OF_BOARD, img_obj_dict))
-    
-
-    
-
-def process_board():
-    pass
-
+   
 def showboard(board):
     '''Helper function to display the current state of the board.'''
     print('=' * 24)
@@ -342,22 +329,9 @@ def showboard(board):
         print()
     print('=' * 24)
 
-def imgObj_creator(pc_name): # input is just a string
-    pc = tk.PhotoImage(file=os.path.join(IMAGEROOT[-1], "{}.svg.png".format(pc_name))) 
-    return pc # allows the invocation of this function to output the necessary image_object
-
 def draw(canvas, piece, row, col): # piece in this case needs to be a photoimage 
-    canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW, tag= 'old')    #PIECE_DICT[STATE_OF_BOARD[row][col]])
-    #pdb.set_trace()
-def chess_2():
-    IMAGEROOT.append("Pieces_2")
-
-def chess_classic():
-    IMAGEROOT.append("Pieces")
+    '''displays a PhotoImage object.'''
+    canvas.create_image(col*100, row *100, image=piece, anchor=tk.NW, tag= 'old')    
     
-
-
-
-
 if __name__ == "__main__":
     main()
