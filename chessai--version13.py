@@ -1,6 +1,6 @@
 # chessai--version13.py
-# description: This program displays a chess board, and allows the user to play another user nearby
-#              or to play against a rather unintelligent artificial intelligence. 
+# description: This program displays a chessboard, and allows the user 
+#              to play against another player nearby, or to play against the computer.
 
 import tkinter as tk
 import random
